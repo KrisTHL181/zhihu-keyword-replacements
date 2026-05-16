@@ -773,14 +773,19 @@
 
         document.getElementById("zhihu-kw-add-rule").addEventListener("click", function () {
             saveCurrentGroup(); // 先把当前UI的规则写回 group
-            var group = loadGroup(getActiveGroupId());
+            var groups = loadGroups();
+            var activeId = getActiveGroupId();
+            var group = null;
+            for (var i = 0; i < groups.length; i++) {
+                if (groups[i].id === activeId) { group = groups[i]; break; }
+            }
             if (!group) return;
             var maxId = 0;
             for (var i = 0; i < group.rules.length; i++) {
                 if (group.rules[i].id > maxId) maxId = group.rules[i].id;
             }
             group.rules.push({ id: maxId + 1, find: "", replace: "", isRegex: false, enabled: true });
-            saveCurrentGroup();
+            saveGroups(groups);
             renderRules();
         });
 
